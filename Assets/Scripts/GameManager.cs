@@ -6,12 +6,14 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject[] Tetrominos;
-    public float movmentFrequency = 0.8f;
+    public float movmentFrequency = 5f;
     private float passedTeime = 0;
     private GameObject currentTetromino;
+    private Grid grid;
     // Start is called before the first frame update
     void Start()
     {
+        grid =GetComponent<Grid>();
         SpawnTetromino();
     }
 
@@ -24,24 +26,28 @@ public class GameManager : MonoBehaviour
             passedTeime -= movmentFrequency;
             MoveTetromino(Vector3.down);
         }
+
         UserInput();
     }
 
     void SpawnTetromino()
     {
         int index=Random.Range(0,Tetrominos.Length);
-        currentTetromino= Instantiate(Tetrominos[index],new Vector3(5,9,0),Quaternion.identity);
+        currentTetromino= Instantiate(Tetrominos[index],new Vector3(5,19,0),Quaternion.identity);
+        
+        
     }
 
     void MoveTetromino(Vector3 direction)
     {
         currentTetromino.transform.position += direction;
-        if (!isValidPosition())
+        if (!isValidPosition()&& !grid.GameOver())
         {
 
             currentTetromino.transform.position -= direction;
             if(direction == Vector3.down)
             {
+                grid.UpdateGrid(currentTetromino.transform);
                 CheckForlines();
                 SpawnTetromino();
             }
@@ -50,7 +56,7 @@ public class GameManager : MonoBehaviour
     }
     bool isValidPosition()
     {
-        return true;
+        return grid.IsValidPosition(currentTetromino.transform);
     }
     void UserInput()
     {
@@ -62,7 +68,7 @@ public class GameManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow)){
             currentTetromino.transform.Rotate(0, 0, 90);
-            if (isValidPosition())
+            if (!isValidPosition())
             {
                 currentTetromino.transform.Rotate(0, 0, -90);
             }
@@ -71,7 +77,7 @@ public class GameManager : MonoBehaviour
     }
     void CheckForlines()
     {
-
+      grid.CheckForLines();
     }
 
 }
