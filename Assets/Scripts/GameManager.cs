@@ -1,26 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject[] Tetrominos;
-    public float movmentFrequency = 5f;
-    private float passedTeime = 0;
+    public float movmentFrequency = 0.8f;
+    private float passedTeime = 1;
     private GameObject currentTetromino;
+    private TetrisUI tetrisUI;
     private Grid grid;
     // Start is called before the first frame update
     void Start()
     {
         grid =GetComponent<Grid>();
+        tetrisUI=GetComponent<TetrisUI>();
+        StartGame();
+      
+    }
+
+    void StartGame()
+    {
         SpawnTetromino();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        passedTeime += Time.deltaTime;
+        if (grid.score > 10) {
+           
+        passedTeime += Time.deltaTime*grid.score/10;
+           
+        }
+        else
+        {
+            passedTeime += Time.deltaTime;
+        }
+
+
         if (passedTeime >= movmentFrequency)
         {
             passedTeime -= movmentFrequency;
@@ -43,7 +61,6 @@ public class GameManager : MonoBehaviour
         currentTetromino.transform.position += direction;
         if (!isValidPosition()&& !grid.GameOver())
         {
-
             currentTetromino.transform.position -= direction;
             if(direction == Vector3.down)
             {
@@ -71,6 +88,13 @@ public class GameManager : MonoBehaviour
             if (!isValidPosition())
             {
                 currentTetromino.transform.Rotate(0, 0, -90);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            for (int i = 0; i <5; i++)
+            {
+                MoveTetromino(Vector3.down);
             }
         }
 

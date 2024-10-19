@@ -6,10 +6,16 @@ public class Grid : MonoBehaviour
 {
     public Transform[,] grid;
     public int width, height;
+    public int level;
+    public int score;
+    public TetrisUI tetrisUI;
     // Start is called before the first frame update
     void Start()
     {
         grid = new Transform[width, height];
+        tetrisUI=GetComponent<TetrisUI>();
+        level = 0;
+        score = 0;
 
     }
 
@@ -110,11 +116,23 @@ public class Grid : MonoBehaviour
 
     void DeleteLine(int y)
     {
+        
         for (int x = 0; x < width; x++)
         {
-            Destroy(grid[x, y].gameObject);
+            Destroy(grid[x, y].gameObject);          
             grid[x, y] = null;
         }
+        score = score + 10;
+        
+        tetrisUI.scoreText.text = score.ToString();
+        Debug.Log(score);
+    }
+
+
+    void ClearGrid()
+    {
+
+
     }
 
     public  bool GameOver()
