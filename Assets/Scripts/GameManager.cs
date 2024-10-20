@@ -10,20 +10,27 @@ public class GameManager : MonoBehaviour
     private GameObject currentTetromino;
     private TetrisUI tetrisUI;
     private Grid grid;
+    public bool gameStatus;
     // Start is called before the first frame update
-    void Start()
+   public void Start()
     {
+        gameStatus = true;
         grid =GetComponent<Grid>();
         tetrisUI=GetComponent<TetrisUI>();
-        StartGame();
-      
+
+        //StartGame();
+        if (gameStatus)
+        {
+            SpawnTetromino();
+        }
+
     }
 
-    void StartGame()
-    {
-        SpawnTetromino();
+    //void StartGame()
+    //{
+    //    SpawnTetromino();
 
-    }
+    //}
 
     // Update is called once per frame
     void Update()
@@ -39,36 +46,44 @@ public class GameManager : MonoBehaviour
         }
 
 
-        if (passedTeime >= movmentFrequency)
+        if (passedTeime >= movmentFrequency&&gameStatus==true)
         {
             passedTeime -= movmentFrequency;
             MoveTetromino(Vector3.down);
         }
-
         UserInput();
     }
 
     void SpawnTetromino()
     {
-        int index=Random.Range(0,Tetrominos.Length);
-        currentTetromino= Instantiate(Tetrominos[index],new Vector3(5,19,0),Quaternion.identity);
-        
+        if (gameStatus==true)
+        {
+            int index = Random.Range(0, Tetrominos.Length);
+            currentTetromino = Instantiate(Tetrominos[index], new Vector3(5, 18, 0), Quaternion.identity);
+        }
+       
         
     }
 
     void MoveTetromino(Vector3 direction)
     {
-        currentTetromino.transform.position += direction;
-        if (!isValidPosition()&& !grid.GameOver())
+        if (!grid.GameOver())
         {
-            currentTetromino.transform.position -= direction;
-            if(direction == Vector3.down)
+            currentTetromino.transform.position += direction;
+
+
+            if (!isValidPosition())
             {
-                grid.UpdateGrid(currentTetromino.transform);
-                CheckForlines();
-                SpawnTetromino();
+                currentTetromino.transform.position -= direction;
+                if (direction == Vector3.down)
+                {
+                    grid.UpdateGrid(currentTetromino.transform);
+                    grid.CheckForLines();
+                    SpawnTetromino();
+                }
             }
         }
+        
 
     }
     bool isValidPosition()
@@ -77,31 +92,34 @@ public class GameManager : MonoBehaviour
     }
     void UserInput()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow)){
+
+        if (gameStatus==true)
+     {
+            
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
             MoveTetromino(Vector3.left);
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow)){
+        
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
             MoveTetromino(Vector3.right);
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow)){
+        
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
             currentTetromino.transform.Rotate(0, 0, 90);
             if (!isValidPosition())
             {
                 currentTetromino.transform.Rotate(0, 0, -90);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             for (int i = 0; i <5; i++)
             {
                 MoveTetromino(Vector3.down);
             }
         }
+     }
 
     }
-    void CheckForlines()
-    {
-      grid.CheckForLines();
-    }
+   
 
 }

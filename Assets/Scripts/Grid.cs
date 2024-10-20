@@ -6,16 +6,21 @@ public class Grid : MonoBehaviour
 {
     public Transform[,] grid;
     public int width, height;
-    public int level;
+    public int speedLevel;
     public int score;
     public TetrisUI tetrisUI;
+    public GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
+        speedLevel = 1;
+        score = 0;
         grid = new Transform[width, height];
         tetrisUI=GetComponent<TetrisUI>();
-        level = 0;
-        score = 0;
+        gameManager = GetComponent<GameManager>();
+        tetrisUI.levelText.text =" Speed : "+ speedLevel.ToString();
+        tetrisUI.scoreText.text ="Score : "+ score.ToString();
+
 
     }
 
@@ -123,15 +128,26 @@ public class Grid : MonoBehaviour
             grid[x, y] = null;
         }
         score = score + 10;
-        
-        tetrisUI.scoreText.text = score.ToString();
+        speedLevel += 1;
+        tetrisUI.scoreText.text ="Score : " +score.ToString();
+        tetrisUI.levelText.text = " Speed : " + speedLevel.ToString();
         Debug.Log(score);
     }
 
 
     void ClearGrid()
     {
-
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if(grid[x, y]!=null) {
+                Destroy(grid[x, y].gameObject);
+                grid[x, y] = null;
+                }
+            }
+            
+        }
 
     }
 
@@ -139,9 +155,12 @@ public class Grid : MonoBehaviour
     {
         for(int x = 0; x < width; x++)
         {
-            if (grid[x, 18] != null)
+            if (grid[x, 19] != null)
             {
-
+                ClearGrid();
+                tetrisUI.imgGameOver.gameObject.SetActive(true);
+                gameManager.gameStatus = false;
+                
                 Debug.Log("Game Over Try Again");
                 return true;
             }
@@ -150,6 +169,7 @@ public class Grid : MonoBehaviour
         return false;
 
     }
+
 
     void DecreaseRowsAbove(int startRow)
     {
