@@ -8,8 +8,8 @@ public class Grid : MonoBehaviour
     public int width, height;
     public int speedLevel;
     public int score;
-    public TetrisUI tetrisUI;
-    public GameManager gameManager;
+    private TetrisUI tetrisUI;
+    private GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -159,6 +159,7 @@ public class Grid : MonoBehaviour
             {
                 ClearGrid();
                 tetrisUI.imgGameOver.gameObject.SetActive(true);
+                
                 gameManager.gameStatus = false;
                 
                 Debug.Log("Game Over Try Again");

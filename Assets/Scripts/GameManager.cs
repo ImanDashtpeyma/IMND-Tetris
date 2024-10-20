@@ -14,11 +14,17 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
    public void Start()
     {
-        gameStatus = true;
+        gameStatus = false;
         grid =GetComponent<Grid>();
         tetrisUI=GetComponent<TetrisUI>();
 
         //StartGame();
+       
+
+    }
+
+   public void StartGame()
+    {
         if (gameStatus)
         {
             SpawnTetromino();
@@ -26,15 +32,13 @@ public class GameManager : MonoBehaviour
 
     }
 
-    //void StartGame()
-    //{
-    //    SpawnTetromino();
-
-    //}
-
     // Update is called once per frame
     void Update()
     {
+        if (gameStatus)
+        {
+            
+        
         if (grid.score > 10) {
            
         passedTeime += Time.deltaTime*grid.score/10;
@@ -52,15 +56,15 @@ public class GameManager : MonoBehaviour
             MoveTetromino(Vector3.down);
         }
         UserInput();
+        }
     }
 
     void SpawnTetromino()
     {
-        if (gameStatus==true)
-        {
+        
             int index = Random.Range(0, Tetrominos.Length);
             currentTetromino = Instantiate(Tetrominos[index], new Vector3(5, 18, 0), Quaternion.identity);
-        }
+        
        
         
     }
@@ -104,6 +108,7 @@ public class GameManager : MonoBehaviour
         
         else if (Input.GetKeyDown(KeyCode.UpArrow))
             {
+                tetrisUI.audioRotate.Play();
             currentTetromino.transform.Rotate(0, 0, 90);
             if (!isValidPosition())
             {
