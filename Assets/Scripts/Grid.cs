@@ -131,6 +131,7 @@ public class Grid : MonoBehaviour
         speedLevel += 1;
         tetrisUI.scoreText.text ="Score : " +score.ToString();
         tetrisUI.levelText.text = " Speed : " + speedLevel.ToString();
+        tetrisUI.audioDrop.Play();
         Debug.Log(score);
     }
 
