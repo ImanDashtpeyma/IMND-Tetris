@@ -16,10 +16,10 @@ public class Grid : MonoBehaviour
         speedLevel = 1;
         score = 0;
         grid = new Transform[width, height];
-        tetrisUI=GetComponent<TetrisUI>();
+        tetrisUI = GetComponent<TetrisUI>();
         gameManager = GetComponent<GameManager>();
-        tetrisUI.levelText.text =" Speed : "+ speedLevel.ToString();
-        tetrisUI.scoreText.text ="Score : "+ score.ToString();
+        tetrisUI.levelText.text = " Speed : " + speedLevel.ToString();
+        tetrisUI.scoreText.text = "Score : " + score.ToString();
 
 
     }
@@ -27,7 +27,7 @@ public class Grid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void UpdateGrid(Transform tetromino)
@@ -61,7 +61,7 @@ public class Grid : MonoBehaviour
         return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
     }
 
- 
+
     public bool IsInsideBorder(Vector2 pos)
     {
         return (int)pos.x >= 0 && (int)pos.x < width && (int)pos.y >= 0 && (int)pos.y < height;
@@ -94,6 +94,7 @@ public class Grid : MonoBehaviour
         return true;
     }
 
+    //Remove Fullline Mino
     public void CheckForLines()
     {
         for (int y = 0; y < height; y++)
@@ -106,7 +107,7 @@ public class Grid : MonoBehaviour
             }
         }
     }
-
+    //Check if we have Fullline tetromino
     bool LineIsFull(int y)
     {
         for (int x = 0; x < width; x++)
@@ -118,51 +119,52 @@ public class Grid : MonoBehaviour
         }
         return true;
     }
-
+    //Distroy Mino in fullline and set it to NULL and set the score and level
     void DeleteLine(int y)
     {
-        
+
         for (int x = 0; x < width; x++)
         {
-            Destroy(grid[x, y].gameObject);          
+            Destroy(grid[x, y].gameObject);
             grid[x, y] = null;
         }
         score = score + 10;
         speedLevel += 1;
-        tetrisUI.scoreText.text ="Score : " +score.ToString();
+        tetrisUI.scoreText.text = "Score : " + score.ToString();
         tetrisUI.levelText.text = " Speed : " + speedLevel.ToString();
         tetrisUI.audioDrop.Play();
         Debug.Log(score);
     }
 
-
+    //Clear Board when Game is over
     void ClearGrid()
     {
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                if(grid[x, y]!=null) {
-                Destroy(grid[x, y].gameObject);
-                grid[x, y] = null;
+                if (grid[x, y] != null)
+                {
+                    Destroy(grid[x, y].gameObject);
+                    grid[x, y] = null;
                 }
             }
-            
+
         }
 
     }
-
-    public  bool GameOver()
+    //GameOver condition
+    public bool GameOver()
     {
-        for(int x = 0; x < width; x++)
+        for (int x = 0; x < width; x++)
         {
             if (grid[x, 19] != null)
             {
                 ClearGrid();
                 tetrisUI.imgGameOver.gameObject.SetActive(true);
-                
+
                 gameManager.gameStatus = false;
-                
+
                 Debug.Log("Game Over Try Again");
                 return true;
             }
@@ -172,7 +174,7 @@ public class Grid : MonoBehaviour
 
     }
 
-
+    //Move upper line of removed line to removed line
     void DecreaseRowsAbove(int startRow)
     {
         for (int y = startRow; y < height; y++)

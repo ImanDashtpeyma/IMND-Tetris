@@ -12,18 +12,15 @@ public class GameManager : MonoBehaviour
     private Grid grid;
     public bool gameStatus;
     // Start is called before the first frame update
-   public void Start()
+    public void Start()
     {
         gameStatus = false;
-        grid =GetComponent<Grid>();
-        tetrisUI=GetComponent<TetrisUI>();
-
-        //StartGame();
-       
+        grid = GetComponent<Grid>();
+        tetrisUI = GetComponent<TetrisUI>();
 
     }
-
-   public void StartGame()
+    //New StartGame to be controled by gameState
+    public void StartGame()
     {
         if (gameStatus)
         {
@@ -37,38 +34,38 @@ public class GameManager : MonoBehaviour
     {
         if (gameStatus)
         {
-            
-        
-        if (grid.score > 10) {
-           
-        passedTeime += Time.deltaTime*grid.score/10;
-           
-        }
-        else
-        {
-            passedTeime += Time.deltaTime;
-        }
 
 
-        if (passedTeime >= movmentFrequency&&gameStatus==true)
-        {
-            passedTeime -= movmentFrequency;
-            MoveTetromino(Vector3.down);
-        }
-        UserInput();
+            if (grid.score > 10)
+            {
+
+                passedTeime += Time.deltaTime * grid.score / 10;
+
+            }
+            else
+            {
+                passedTeime += Time.deltaTime;
+            }
+
+
+            if (passedTeime >= movmentFrequency && gameStatus == true)
+            {
+                passedTeime -= movmentFrequency;
+                MoveTetromino(Vector3.down);
+            }
+            UserInput();
         }
     }
-
+    //Spawn Prefab Tetromino randomly from midle of board
     void SpawnTetromino()
     {
-        
-            int index = Random.Range(0, Tetrominos.Length);
-            currentTetromino = Instantiate(Tetrominos[index], new Vector3(5, 18, 0), Quaternion.identity);
-        
-       
-        
+
+        int index = Random.Range(0, Tetrominos.Length);
+        currentTetromino = Instantiate(Tetrominos[index], new Vector3(5, 18, 0), Quaternion.identity);
+
     }
 
+    //Move Tetromino TO Down of the Board
     void MoveTetromino(Vector3 direction)
     {
         if (!grid.GameOver())
@@ -87,44 +84,46 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        
+
 
     }
+
     bool isValidPosition()
     {
         return grid.IsValidPosition(currentTetromino.transform);
     }
+    //assigned arrow key movement key as user input
     void UserInput()
     {
 
-        if (gameStatus==true)
-     {
-            
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-            MoveTetromino(Vector3.left);
-        
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-            MoveTetromino(Vector3.right);
-        
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (gameStatus == true)
+        {
+
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+                MoveTetromino(Vector3.left);
+
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+                MoveTetromino(Vector3.right);
+
+            else if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 tetrisUI.audioRotate.Play();
-            currentTetromino.transform.Rotate(0, 0, 90);
-            if (!isValidPosition())
+                currentTetromino.transform.Rotate(0, 0, 90);
+                if (!isValidPosition())
+                {
+                    currentTetromino.transform.Rotate(0, 0, -90);
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                currentTetromino.transform.Rotate(0, 0, -90);
+                for (int i = 0; i < 5; i++)
+                {
+                    MoveTetromino(Vector3.down);
+                }
             }
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            for (int i = 0; i <5; i++)
-            {
-                MoveTetromino(Vector3.down);
-            }
-        }
-     }
 
     }
-   
+
 
 }

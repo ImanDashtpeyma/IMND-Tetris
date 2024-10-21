@@ -20,11 +20,11 @@ public class TetrisUI : MonoBehaviour
     void Start()
     {
         gameManager = GetComponent<GameManager>();
-        retry =GameObject.Find("Btn Retry").GetComponent<Button>();
+        retry = GameObject.Find("Btn Retry").GetComponent<Button>();
         start = GameObject.Find("Btn Start").GetComponent<Button>();
         audioDrop = GameObject.Find("Drop").GetComponent<AudioSource>();
-        audioMenuClick= GameObject.Find("MenuClick").GetComponent<AudioSource>();
-        audioRotate= GameObject.Find("Rotate").GetComponent<AudioSource>();
+        audioMenuClick = GameObject.Find("MenuClick").GetComponent<AudioSource>();
+        audioRotate = GameObject.Find("Rotate").GetComponent<AudioSource>();
         retry.onClick.AddListener(RestartGame);
         retry.gameObject.SetActive(false);
         start.onClick.AddListener(StartGame);
@@ -34,7 +34,7 @@ public class TetrisUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void RestartGame()
