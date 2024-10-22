@@ -21,7 +21,6 @@ public class Grid : MonoBehaviour
         tetrisUI.levelText.text = " Speed : " + speedLevel.ToString();
         tetrisUI.scoreText.text = "Score : " + score.ToString();
 
-
     }
 
     // Update is called once per frame
